@@ -1,0 +1,4 @@
+title: NBA RSS Feeds
+description: Automatically generated NBA RSS feeds
+baseurl: ""  # leave empty
+theme: jekyll-theme-primer
