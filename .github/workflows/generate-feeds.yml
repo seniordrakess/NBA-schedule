@@ -1,1 +1,38 @@
+name: Generate NBA RSS feeds
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # run daily at 06:00 UTC
+  workflow_dispatch:        # allow manual runs
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate RSS feeds
+        env:
+          BALLDONTLIE_API_KEY: ${{ secrets.BALLDONTLIE_API_KEY }}
+        run: python generate_feeds.py --season-year 2025
+
+      - name: Commit generated feeds
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions
+          author_email: github-actions@github.com
+          message: "Auto-update NBA RSS feeds"
+          add: 'docs/feeds'
 
